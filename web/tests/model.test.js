@@ -1,3 +1,5 @@
-import test from 'node:test';import assert from 'node:assert/strict';
-test('project time supports configured frame rates',()=>{for(const fps of [24,30,48,60,120])assert.equal(Math.floor((1/fps)*fps),1)})
+import test from 'node:test';import assert from 'node:assert/strict';import {formatTimecode,frameDuration,frameToTime,parseTimecode,snapTimeToFrame,timeToFrame} from '../src/time.js'
+test('project time supports configured frame rates',()=>{for(const fps of [24,30,48,60,120]){assert.equal(timeToFrame(frameToTime(137,fps),fps),137);assert.equal(frameDuration(fps),1/fps)}})
+test('timecode round trips on every supported rate',()=>{for(const fps of [24,30,48,60,120]){const value=`01:02:03:${String(fps-1).padStart(2,'0')}`;assert.equal(formatTimecode(parseTimecode(value,fps),fps),value)}})
+test('timeline values snap to the project frame grid',()=>{assert.equal(snapTimeToFrame(.019,60),1/60);assert.throws(()=>parseTimecode('00:00:00:60',60),RangeError)})
 test('SPA routes are declared',async()=>{const source=await import('node:fs/promises').then(fs=>fs.readFile(new URL('../src/main.js',import.meta.url),'utf8'));for(const route of ['project/new','editor','privacy','terms'])assert.match(source,new RegExp(route.replace('/','\\/')))})
