@@ -15,13 +15,35 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.kingmotion.engine.model.Project
 
-@Composable fun HomeScreen(projects: List<Project>, onNewProject: () -> Unit, onOpen: (Project) -> Unit) {
+@Composable
+fun HomeScreen(
+    projects: List<Project>,
+    onNewProject: () -> Unit,
+    onOpen: (Project) -> Unit,
+) {
     Column(Modifier.fillMaxSize().background(Brush.verticalGradient(listOf(MaterialTheme.colorScheme.background, MaterialTheme.colorScheme.surface))).systemBarsPadding().padding(20.dp)) {
         Row(verticalAlignment = Alignment.CenterVertically) { Box(Modifier.size(44.dp).background(MaterialTheme.colorScheme.primary, RoundedCornerShape(12.dp)), contentAlignment=Alignment.Center){Text("KM", fontWeight=FontWeight.Black)}; Spacer(Modifier.width(12.dp)); Column { Text("KING MOTION", fontWeight=FontWeight.Black); Text("Freedom • Control • Performance", style=MaterialTheme.typography.labelSmall) } }
         Spacer(Modifier.height(24.dp)); Text("Create without limits.", style=MaterialTheme.typography.headlineMedium, fontWeight=FontWeight.Bold)
         Spacer(Modifier.height(16.dp)); Button(onClick=onNewProject, modifier=Modifier.fillMaxWidth().height(54.dp)){Text("＋ New Project")}
         Spacer(Modifier.height(24.dp)); Row(Modifier.fillMaxWidth(), horizontalArrangement=Arrangement.SpaceBetween){Text("Recent Projects", style=MaterialTheme.typography.titleMedium); Text("Assets & Effects", color=MaterialTheme.colorScheme.secondary)}
         Spacer(Modifier.height(8.dp)); if(projects.isEmpty()) Box(Modifier.fillMaxWidth().weight(1f).background(MaterialTheme.colorScheme.surfaceVariant, RoundedCornerShape(16.dp)), contentAlignment=Alignment.Center){Text("No projects yet")}
-        else LazyColumn(verticalArrangement=Arrangement.spacedBy(8.dp)){items(projects, key=Project::id){p -> Card(Modifier.fillMaxWidth().clickable{onOpen(p)}){Column(Modifier.padding(16.dp)){Text(p.name, fontWeight=FontWeight.Bold); val c=p.compositions.first(); Text("${c.width}×${c.height} • ${c.frameRate.toInt()} FPS • ${p.settings.quality}", style=MaterialTheme.typography.labelMedium)}}}}
+        else LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            items(projects, key = Project::id) { project ->
+                val composition = project.compositions.firstOrNull()
+                Card(Modifier.fillMaxWidth().clickable { onOpen(project) }) {
+                    Column(Modifier.padding(16.dp)) {
+                        Text(project.name, fontWeight = FontWeight.Bold)
+                        if (composition != null) {
+                            Text(
+                                "${composition.width}×${composition.height} • ${composition.frameRate.toInt()} FPS • ${project.settings.quality}",
+                                style = MaterialTheme.typography.labelMedium,
+                            )
+                        } else {
+                            Text("Empty project", style = MaterialTheme.typography.labelMedium)
+                        }
+                    }
+                }
+            }
+        }
     }
 }
