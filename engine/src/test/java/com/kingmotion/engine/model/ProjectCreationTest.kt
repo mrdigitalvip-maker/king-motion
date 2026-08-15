@@ -3,7 +3,7 @@ package com.kingmotion.engine.model
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
-class ProjectFactoryTest {
+class ProjectCreationTest {
     @Test
     fun suppliesNumberedDefaultAndRealSettings() {
         val project = ProjectFactory.create(
