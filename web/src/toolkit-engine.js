@@ -22,9 +22,22 @@ export function splitLayer(layer, at) {
   return [left, right]
 }
 
-export function extractAudioLayer(video) {
+export function trimLayer(layer, edge, at) {
+  if (!['start', 'end'].includes(edge)) throw new TypeError('Trim edge must be start or end')
+  if (edge === 'start') {
+    if (!(at >= 0 && at < layer.end)) throw new RangeError('Trim start must be before the layer end')
+    const copy = clone(layer)
+    copy.trimStart = (layer.trimStart || 0) + (at - layer.start) * (layer.speed || 1)
+    copy.start = at
+    return copy
+  }
+  if (!(at > layer.start)) throw new RangeError('Trim end must be after the layer start')
+  return { ...clone(layer), end: at }
+}
+
+export function extractAudioLayer(video, decoded = false) {
   if (video.type !== 'Video') throw new TypeError('Audio can only be extracted from a video layer')
-  return createLayer('Audio', `${video.name} · Audio`, { start: video.start, end: video.end, trimStart: video.trimStart || 0, sourceLayerId: video.id, sourceMime: video.mime, needsDemux: true, fadeIn: 0, fadeOut: 0 })
+  return createLayer('Audio', `${video.name} · Audio`, { start: video.start, end: video.end, trimStart: video.trimStart || 0, sourceLayerId: video.id, sourceMime: video.mime, needsDemux: !decoded, fadeIn: 0, fadeOut: 0 })
 }
 
 export const createCameraTrack = (duration, start = 0) => createLayer('Camera', 'Global Camera Track', { start, end: start + duration, zoom: 100, trackingMode: 'transform-2d', status: 'Ready' })
