@@ -72,3 +72,7 @@ Compose renders immutable editor state and emits user intents. The current in-me
 ## Extension path
 
 New effects add a versioned definition and shader, then pass schema and render tests. New layer types implement the `Layer` contract and provide a renderer adapter. Audio can add track and automation models alongside layers while using the common microsecond clock. Persistence should introduce explicit versioned DTOs and migrations instead of serializing runtime classes directly. Feature modules may be split from `app` as their build times and ownership justify it.
+
+## Project workflow and Editor Studio
+
+Project creation now produces a configured domain `Project` and main `Composition` through `ProjectFactory`; see [Editor Studio UI](EDITOR_UI.md) for the creation flow, reducer-style editor state, timeline, independent preview renderer boundary, assets, and planned audio extraction pipeline.
