@@ -1,20 +1,24 @@
 package com.kingmotion.editor.ui
 
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.activity.compose.BackHandler
+import androidx.compose.runtime.*
+import androidx.compose.ui.platform.LocalContext
 import com.kingmotion.editor.editor.EditorScreen
 import com.kingmotion.editor.home.HomeScreen
+import com.kingmotion.editor.projects.ProjectSetupScreen
+import com.kingmotion.editor.projects.ProjectStore
+import com.kingmotion.engine.model.Project
 
-private enum class Screen { Home, Editor }
+private sealed interface Screen { data object Home: Screen; data object Setup: Screen; data class Editor(val project: Project): Screen }
 
-@Composable
-fun KingMotionApp() {
-    var screen by remember { mutableStateOf(Screen.Home) }
-    when (screen) {
-        Screen.Home -> HomeScreen(onNewProject = { screen = Screen.Editor })
-        Screen.Editor -> EditorScreen(onBack = { screen = Screen.Home })
+@Composable fun KingMotionApp() {
+    val context = LocalContext.current
+    val store = remember { ProjectStore(context) }
+    var screen by remember { mutableStateOf<Screen>(Screen.Home) }
+    BackHandler(screen !is Screen.Home) { screen = Screen.Home }
+    when (val current = screen) {
+        Screen.Home -> HomeScreen(store.list(), { screen = Screen.Setup }, { screen = Screen.Editor(it) })
+        Screen.Setup -> ProjectSetupScreen(onBack = { screen = Screen.Home }) { project -> store.save(project); screen = Screen.Editor(project) }
+        is Screen.Editor -> EditorScreen(current.project, onBack = { screen = Screen.Home }, onSave = store::save)
     }
 }

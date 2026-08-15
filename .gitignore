@@ -8,3 +8,12 @@ local.properties
 gradle/wrapper/
 gradlew
 gradlew.bat
+*.apk
+*.aab
+*.so
+*.jar
+*.png
+*.jpg
+*.jpeg
+*.webp
+*.zip
