@@ -1,6 +1,6 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { audioEffectRecipes, createCameraTrack, createLayer, createMask, defaultChromaKey, duplicateLayer, exportAudit, extractAudioLayer, splitLayer, textStyleRecipes } from '../src/toolkit-engine.js'
+import { audioEffectRecipes, createCameraTrack, createLayer, createMask, defaultChromaKey, duplicateLayer, exportAudit, extractAudioLayer, splitLayer, textStyleRecipes, trimLayer } from '../src/toolkit-engine.js'
 
 test('split is non-destructive and advances source trim', () => {
   const source = createLayer('Video', 'Clip', { start: 2, end: 10, trimStart: 3, speed: 2, effects: [{ name: 'Glow' }], masks: [createMask()] })
@@ -24,6 +24,14 @@ test('audio extraction aligns with video without claiming browser demux', () => 
   const video = createLayer('Video', 'Interview', { start: 4, end: 14, mime: 'video/mp4' })
   const audio = extractAudioLayer(video)
   assert.deepEqual([audio.start, audio.end, audio.sourceLayerId, audio.needsDemux], [4, 14, video.id, true])
+})
+
+test('trim updates source in while preserving non-destructive media timing', () => {
+  const source = createLayer('Video', 'Clip', { start: 2, end: 10, trimStart: 3, speed: 2 })
+  const trimmed = trimLayer(source, 'start', 5)
+  assert.deepEqual([trimmed.start, trimmed.end, trimmed.trimStart], [5, 10, 9])
+  assert.equal(source.start, 2)
+  assert.equal(trimLayer(source, 'end', 8).end, 8)
 })
 
 test('camera, mask, chroma, text and audio recipes expose editable models', () => {
