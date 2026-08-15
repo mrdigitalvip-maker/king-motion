@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "id": "com.kingmotion.effects.brightness",
+  "name": "Brightness",
+  "category": "color",
+  "fragmentShader": "shaders/brightness.frag",
+  "parameters": [
+    {
+      "id": "brightness",
+      "displayName": "Brightness",
+      "type": "float",
+      "default": 0.0,
+      "min": -1.0,
+      "max": 1.0,
+      "animatable": true
+    }
+  ]
+}
