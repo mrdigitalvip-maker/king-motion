@@ -30,7 +30,11 @@ fun HomeScreen(onNewProject: () -> Unit) {
                 Text("Create without limits", style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.secondary)
             }
         }
-        Spacer(Modifier.height(48.dp))
+        Spacer(Modifier.height(22.dp))
+        Row(Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.surfaceVariant, RoundedCornerShape(12.dp)).padding(8.dp), horizontalArrangement = Arrangement.SpaceEvenly) {
+            listOf("1080p", "16:9", "30 FPS", "High").forEach { AssistChip(onClick = {}, label = { Text(it) }) }
+        }
+        Spacer(Modifier.height(28.dp))
         Text("Your next motion starts here.", style = MaterialTheme.typography.headlineLarge, fontWeight = FontWeight.Bold)
         Spacer(Modifier.height(20.dp))
         Button(onClick = onNewProject, modifier = Modifier.fillMaxWidth().height(56.dp), shape = RoundedCornerShape(16.dp)) {
@@ -39,7 +43,7 @@ fun HomeScreen(onNewProject: () -> Unit) {
         Spacer(Modifier.height(36.dp))
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             Text("Recent projects", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
-            TextButton(onClick = {}) { Text("Assets & Effects") }
+            TextButton(onClick = {}) { Text("Assets & Effects  ·  Installed Packs") }
         }
         Box(
             Modifier.fillMaxWidth().weight(1f).background(MaterialTheme.colorScheme.surfaceVariant, RoundedCornerShape(20.dp)),
