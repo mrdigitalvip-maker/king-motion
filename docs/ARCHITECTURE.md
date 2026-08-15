@@ -6,9 +6,9 @@ King Motion is local-first, modular, and intentionally avoids a required backend
 
 ## Module map
 
-`app` owns Android lifecycle, Compose screens, navigation, and packaged resources. Its feature packages (`home`, `editor`, and later `projects`, `timeline`, `preview`, and `export`) should depend on engine APIs, never the other way around.
+`app` owns Android lifecycle, Compose screens, navigation, packaged resources, Media3 playback, Storage Access Framework integration, and versioned local JSON persistence. It depends on engine APIs, never the other way around.
 
-`engine` owns platform-independent domain concepts where practical. Current packages separate `model`, `keyframes`, `effects`, and `renderer`. Planned packages are `media`, `audio`, and `export`. A future large feature can become its own Gradle module without changing the persisted concepts.
+`engine` owns platform-independent domain concepts where practical. Packages separate `model`, `timeline`, `keyframes`, `effects`, `media`, `audio`, and `renderer`. Android decode/export adapters stay outside these contracts.
 
 ## Project, composition, and layers
 
@@ -58,7 +58,7 @@ The target preview pipeline is:
 
 ## UI and state
 
-Compose renders immutable editor state and emits user intents. The current in-memory navigation is intentionally small. As persistence arrives, screen state will move to ViewModels and repositories; renderer lifetimes remain managed below Compose. UI code must not parse schemas or operate codecs directly.
+Compose renders immutable editor state and emits user intents. `TimelineEditor` returns composition replacements and `EditHistory` keeps bounded metadata snapshots (never media bytes). The repository stores schema-tagged JSON and editor writes are debounced. Renderer/player lifetimes stay below domain state; codec-heavy work and DSP must remain off the main thread.
 
 ## Technology decisions
 

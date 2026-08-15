@@ -1,53 +1,28 @@
 # King Motion
 
-King Motion is an Android-first video and motion-design editor for creators who need precise control over layers, effects, animation, and export. The project is building an original, local-first editing engine with no mandatory backend or paid service.
+King Motion is a local-first Android video and motion editor. This milestone is an honest, installable editor prototype: project setup and reopening, Storage Access Framework media import, Media3 preview, a multi-layer timeline, non-destructive edits, transform/keyframe data, manual beat markers, autosave, and an artifact-only Android build.
 
-## Vision
+## What works
 
-The long-term editing flow is **create project → import media → preview → arrange the timeline → apply effects → animate parameters with keyframes → export**. The current repository deliberately implements only the small, maintainable foundation for that flow.
+- Create named/default projects at 1080p, 1440p, or 4K with aspect, 24–120 FPS, quality, type, and background metadata.
+- Reopen locally saved projects; only content URIs and metadata are persisted.
+- Import video, image, and audio with `ACTION_OPEN_DOCUMENT` and durable URI access. Videos below 1080p are rejected safely.
+- Preview selected video/audio with Media3; play/pause, frame stepping, scrub, horizontal timeline scroll, zoom, selection, and multiple layers.
+- Split, duplicate, delete, reorder, and trim domain operations; bounded undo/redo; opacity and opacity keyframe editing.
+- Non-destructively expose a video's audio as an aligned audio layer and add/show beat markers.
+- Add the bundled Brightness definition from Color (GPU execution is not connected).
+- Debounced local autosave with Saving/Saved feedback.
 
-## Stack
+## Explicit limitations
 
-- Kotlin and Gradle Kotlin DSL
-- Jetpack Compose with a custom dark Material 3 theme
-- Modular `app` and `engine` boundaries
-- OpenGL ES 2.0 shader foundation
-- Android media APIs planned for decode, encode, and muxing
-- Local processing and project storage by default
+Automatic beat DSP exists and is deterministically tested in `engine`, but the compressed-audio-to-PCM adapter is incomplete, so **Detect Beats reports that it is unavailable** rather than generating fake results. Extract Audio creates a linked playable layer; it does not write a file. Preview-quality selection is state only. Image compositing, proxy rendering, full transform controls, keyframe navigation, effects execution, split-on-beats, capability fallback, and real export remain planned.
 
-All current runtime dependencies are free, open-source Android/Jetpack components and require no hosted service.
+## Build
 
-## Local setup
-
-The repository intentionally does not commit the Gradle Wrapper JAR because some
-code-review and pull-request environments reject binary files. Install Gradle
-8.10.2, then generate the wrapper locally before the first build:
-
-```bash
-gradle wrapper --gradle-version 8.10.2
-./gradlew assembleDebug
-```
-
-On Windows, run the generated `gradlew.bat assembleDebug` command instead. The
-generated wrapper files must not be added to a pull request in environments that
-do not accept binary changes.
-
-## Current status
-
-The app contains a functional home-to-editor navigation flow, a three-region editor shell, core project/timeline models, linear float keyframes, a data-described effect contract, and an original brightness shader proof of concept. Media import, live preview rendering, persistence, audio processing, and export are not connected yet.
+Install JDK 17, Android SDK 35, and Gradle 8.10.2, then run `gradle test` and `gradle assembleDebug`. The untracked APK is produced at `app/build/outputs/apk/debug/app-debug.apk`. GitHub Actions publishes it only as the `king-motion-debug` artifact. See [Android build instructions](docs/ANDROID_BUILD.md).
 
 ## Modules
 
-- `app`: Compose UI, navigation, Android resources, and bundled effect assets.
-- `engine`: editor-domain models, keyframe evaluation, effect definitions, and GPU program primitives.
-- `docs`: architecture and technical decisions.
-
-## Roadmap
-
-1. Project persistence and Android photo-picker media import.
-2. MediaExtractor/MediaCodec decode feeding a GPU preview surface.
-3. Interactive multi-track timeline and parameter controls.
-4. Effect graph execution and richer interpolation/easing.
-5. Offline MediaCodec/MediaMuxer export, audio mixing, and reliability testing.
-
-See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for the system design.
+- `app`: Compose UI, document/media adapters, JSON project store, Media3 player, and XML resources.
+- `engine`: models, timeline/history, media policy, onset detection, effects, keyframes, and renderer primitives.
+- `docs`: architecture, engine/audio design, build instructions, and submitted-asset analysis.
