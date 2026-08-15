@@ -26,3 +26,11 @@ Install JDK 17, Android SDK 35, and Gradle 8.10.2, then run `gradle test` and `g
 - `app`: Compose UI, document/media adapters, JSON project store, Media3 player, and XML resources.
 - `engine`: models, timeline/history, media policy, onset detection, effects, keyframes, and renderer primitives.
 - `docs`: architecture, engine/audio design, build instructions, and submitted-asset analysis.
+
+## AI Image Studio
+
+King Motion includes a premium, responsive generative image workspace at `/ai-studio`. It supports text-to-image creation, prompt-driven editing, asset-oriented quick actions, local generation history, downloads, and contextual handoff to the timeline. The Home card and the editor's unobtrusive **AI** entry open the same SPA module.
+
+The browser sends generation settings to `/api/ai/image/create` or `/api/ai/image/edit`. Vercel serverless handlers own all Gemini communication; the API key is never included in client bundles. Configure `GEMINI_API_KEY` in the Vercel project (and optionally `GEMINI_IMAGE_MODEL` to override the default image model). Do not prefix this secret with a public/client environment namespace.
+
+See [`web/README.md`](web/README.md) for workflows, architecture, and current limitations.
