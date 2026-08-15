@@ -1,4 +1,5 @@
 import { home, newProject, editor, legal } from './editor.js'
+import { aiStudio } from './ai-studio.js'
 import { getProject } from './store.js'
 
 const app = document.querySelector('#app')
@@ -8,6 +9,7 @@ export function route() {
   if (path === '/') home(app)
   else if (path === '/project/new') newProject(app)
   else if (path === '/editor') editor(app, getProject(new URLSearchParams(location.search).get('id')))
+  else if (path === '/ai-studio') aiStudio(app)
   else if (path === '/privacy' || path === '/terms') legal(app, path.slice(1))
   else { history.replaceState({}, '', '/'); home(app) }
 }

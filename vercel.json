@@ -1,1 +1,1 @@
-{"buildCommand":"npm run build","outputDirectory":"web/dist","rewrites":[{"source":"/((?!src/|manifest.webmanifest).*)","destination":"/index.html"}]}
+{"buildCommand":"npm run build","outputDirectory":"web/dist","rewrites":[{"source":"/((?!api/|src/|manifest.webmanifest).*)","destination":"/index.html"}]}

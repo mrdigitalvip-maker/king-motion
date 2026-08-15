@@ -12,7 +12,7 @@ for (const path of ['index.html', 'src', 'manifest.webmanifest', 'vercel.json'])
 
 // Physical fallbacks make deep links work on static hosts as well as through
 // the Vercel SPA rewrite.
-for (const route of ['editor', 'project/new', 'privacy', 'terms']) {
+for (const route of ['editor', 'project/new', 'ai-studio', 'privacy', 'terms']) {
   await mkdir(new URL(`${route}/`, output), { recursive: true })
   await cp(new URL('index.html', root), new URL(`${route}/index.html`, output))
 }
