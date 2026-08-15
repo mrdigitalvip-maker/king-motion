@@ -1,0 +1,1 @@
+{"cleanUrls":true,"rewrites":[{"source":"/((?!src/|manifest.webmanifest).*)","destination":"/index.html"}]}

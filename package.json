@@ -1,0 +1,1 @@
+{"name":"king-motion","private":true,"scripts":{"build":"npm --prefix web run build","lint":"npm --prefix web run lint","typecheck":"npm --prefix web run typecheck","test":"npm --prefix web test"}}
